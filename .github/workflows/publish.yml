@@ -18,7 +18,6 @@ jobs:
      runs-on: ubuntu-latest
      steps:
       - run: echo "registry=https://npm.pkg.github.com/@hirenrparghi" >> .npmrc
-      - run: npm run build
       - run: npm publish --access public $(ls *.tgz)
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
