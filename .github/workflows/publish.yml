@@ -3,7 +3,7 @@ name: "publish npm"
 on: push
 
 jobs:
-    publish:
+    build:
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -13,8 +13,12 @@ jobs:
               with:
                   node-version: 12
                   registry-url: https://npm.pkg.github.com
-            - name: publish
-              run: npm publish --access public
-              working-directory: my-package
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    publish-gpr:
+     needs: build
+     runs-on: ubuntu-latest
+     steps:
+      - run: echo "registry=https://npm.pkg.github.com/@hirenrparghi" >> .npmrc
+      - run: npm run build
+      - run: npm publish --access public $(ls *.tgz)
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
